@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": [],
-  "sections": [
-    {"offset": {"line": 13, "column": 0}, "map": {"version":3,"sources":["file:///Users/ineschavez/Desktop/HookedAI/HookedAI/src/app/favicon.ico.mjs%20%28structured%20image%20object%29"],"sourcesContent":["import src from \"IMAGE\";\nexport default { src, width: 256, height: 256 }\n"],"names":["src","width","height"],"mappings":";;;;AAAA;;uCACe;IAAEA,KAAAA,0IAAG;IAAEC,OAAO;IAAKC,QAAQ;AAAI"}},
-    {"offset": {"line": 28, "column": 0}, "map": {"version":3,"sources":["file:///Users/ineschavez/Desktop/HookedAI/HookedAI/src/app/page.tsx"],"sourcesContent":["export default function Home() {\n  return (\n    <div className=\"flex flex-col items-center justify-center min-h-screen px-4\">\n      {/* Main heading */}\n      <h1 className=\"text-5xl font-bold tracking-tight sm:text-6xl\">\n        HookedAI\n      </h1>\n\n      {/* Tagline */}\n      <p className=\"mt-4 text-lg text-zinc-600 dark:text-zinc-400 text-center max-w-md\">\n        We're plotting your next obsession. Turn any photo into a crochet pattern powered by AI.\n      </p>\n\n      {/* Coming soon badge */}\n      <span className=\"mt-8 inline-block rounded-full border border-zinc-300 dark:border-zinc-700 px-4 py-2 text-sm text-zinc-500 dark:text-zinc-400\">\n        Coming Soon\n      </span>\n    </div>\n  );\n}\n"],"names":["Home","className"],"mappings":";;;;;;AAAe,SAASA;IACtB,qBACE,8OAAC;QAAIC,WAAU;;0BAEb,8OAAC;gBAAGA,WAAU;0BAAgD;;;;;;0BAK9D,8OAAC;gBAAEA,WAAU;0BAAqE;;;;;;0BAKlF,8OAAC;gBAAKA,WAAU;0BAAgI;;;;;;;;;;;;AAKtJ"}}]
-}
