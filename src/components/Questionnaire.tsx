@@ -2,13 +2,15 @@
 
 import { useState } from "react";
 import { saveQuestionnaire } from "@/lib/questionnaire";
+import { extractColors, savePalette } from "@/lib/color-extraction";
 import type { DifficultyLevel, PatternStyle } from "@/types/questionnaire";
 
 interface QuestionnaireProps {
   imageUrl: string;
+  onColorsExtracted?: (colors: string[]) => void;
 }
 
-export default function Questionnaire({ imageUrl }: QuestionnaireProps) {
+export default function Questionnaire({ imageUrl, onColorsExtracted }: QuestionnaireProps) {
   const [stitchWidth, setStitchWidth] = useState<number>(50);
   const [difficultyLevel, setDifficultyLevel] = useState<DifficultyLevel>("beginner");
   const [patternStyle, setPatternStyle] = useState<PatternStyle>("simple-blocky");
@@ -29,6 +31,16 @@ export default function Questionnaire({ imageUrl }: QuestionnaireProps) {
         patternStyle,
         colorCount,
       });
+
+      // Extract colors from the uploaded image using Color Thief
+      const colors = await extractColors(imageUrl, colorCount);
+
+      // Save the extracted palette to Supabase
+      await savePalette(imageUrl, colors, colorCount);
+
+      // Pass extracted colors up to the parent
+      onColorsExtracted?.(colors);
+
       setStatus("success");
     } catch (err) {
       setStatus("error");

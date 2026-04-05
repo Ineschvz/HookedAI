@@ -3,10 +3,12 @@
 import { useState } from "react";
 import ImageUpload from "@/components/ImageUpload";
 import Questionnaire from "@/components/Questionnaire";
+import ColorPalette from "@/components/ColorPalette";
 import type { UploadResult } from "@/types/upload";
 
 export default function Home() {
   const [uploadResult, setUploadResult] = useState<UploadResult | null>(null);
+  const [extractedColors, setExtractedColors] = useState<string[] | null>(null);
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen px-4 py-12">
@@ -27,7 +29,15 @@ export default function Home() {
 
       {/* Questionnaire — appears after image upload */}
       {uploadResult && (
-        <Questionnaire imageUrl={uploadResult.publicUrl} />
+        <Questionnaire
+          imageUrl={uploadResult.publicUrl}
+          onColorsExtracted={(colors) => setExtractedColors(colors)}
+        />
+      )}
+
+      {/* Extracted color palette — appears after questionnaire submit */}
+      {extractedColors && (
+        <ColorPalette colors={extractedColors} />
       )}
     </div>
   );
