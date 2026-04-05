@@ -5,7 +5,9 @@ import { validateImageFile } from "@/lib/validation";
 import { uploadImage } from "@/lib/upload";
 import type { UploadStatus, UploadResult } from "@/types/upload";
 
+//props for the ImageUpload component, allowing the parent component to receive the upload results and handle them as needed
 interface ImageUploadProps {
+  //`prop?: Type`
   onUploadComplete?: (result: UploadResult) => void;
 }
 
@@ -16,6 +18,9 @@ export default function ImageUpload({ onUploadComplete }: ImageUploadProps) {
   const [error, setError] = useState<string | null>(null);
   const [isDragging, setIsDragging] = useState(false);
 
+
+//when drop zone is clicked, it triggers hidden file input to open file browser dialog
+//grabs the element on DOM 
   const inputRef = useRef<HTMLInputElement>(null);
 
   /** Clean up the previous object URL to avoid memory leaks */
@@ -71,21 +76,28 @@ export default function ImageUpload({ onUploadComplete }: ImageUploadProps) {
 
   // ── Drag-and-drop handlers ──────────────────────────────────────────
 
+  //  lets us track when a file is being dragged over the drop zone
+  //(e: React.DragEvent) is the event type for drag events in react
   const handleDragOver = (e: React.DragEvent) => {
+    // Prevent default to allow drop
     e.preventDefault();
+    // This is necessary to allow a drop
     setIsDragging(true);
   };
 
+  // When a file is dragged out of the drop zone, resets the dragging state to false
   const handleDragLeave = (e: React.DragEvent) => {
     e.preventDefault();
     setIsDragging(false);
   };
 
+  // when file is dropped into the zone.
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
     setIsDragging(false);
-
+//variable droppedFile is assigned the first file from the list of files that were dropped. 
     const droppedFile = e.dataTransfer.files[0];
+    //if there is a file it calls handlefile function to process the file (validate, preview, upload)
     if (droppedFile) handleFile(droppedFile);
   };
 
@@ -109,6 +121,7 @@ export default function ImageUpload({ onUploadComplete }: ImageUploadProps) {
       {/* Drop zone */}
       <button
         type="button"
+        //controls the file input element, allowing users to click the drop zone to open the file browser dialog
         onClick={() => inputRef.current?.click()}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
