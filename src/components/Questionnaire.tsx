@@ -3,19 +3,22 @@
 import { useState } from "react";
 import { saveQuestionnaire } from "@/lib/questionnaire";
 import { extractColors, savePalette } from "@/lib/color-extraction";
+import { generatePattern } from "@/lib/generate-pattern";
 import type { DifficultyLevel, PatternStyle } from "@/types/questionnaire";
+import type { GridPattern } from "@/types/pattern";
 
 interface QuestionnaireProps {
   imageUrl: string;
   onColorsExtracted?: (colors: string[]) => void;
+  onPatternGenerated?: (pattern: GridPattern) => void;
 }
 
-export default function Questionnaire({ imageUrl, onColorsExtracted }: QuestionnaireProps) {
+export default function Questionnaire({ imageUrl, onColorsExtracted, onPatternGenerated }: QuestionnaireProps) {
   const [stitchWidth, setStitchWidth] = useState<number>(50);
   const [difficultyLevel, setDifficultyLevel] = useState<DifficultyLevel>("beginner");
   const [patternStyle, setPatternStyle] = useState<PatternStyle>("simple-blocky");
   const [colorCount, setColorCount] = useState<number>(4);
-  const [status, setStatus] = useState<"idle" | "saving" | "success" | "error">("idle");
+  const [status, setStatus] = useState<"idle" | "saving" | "generating" | "success" | "error">("idle");
   const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -40,6 +43,20 @@ export default function Questionnaire({ imageUrl, onColorsExtracted }: Questionn
 
       // Pass extracted colors up to the parent
       onColorsExtracted?.(colors);
+
+      // Generate the crochet grid pattern via canvas pixel sampling
+      setStatus("generating");
+      const pattern = await generatePattern({
+        imageUrl,
+        colors,
+        stitchWidth,
+        difficultyLevel,
+        patternStyle,
+        colorCount,
+      });
+
+      // Pass generated pattern up to the parent
+      onPatternGenerated?.(pattern);
 
       setStatus("success");
     } catch (err) {
@@ -164,10 +181,14 @@ export default function Questionnaire({ imageUrl, onColorsExtracted }: Questionn
       {/* Submit */}
       <button
         type="submit"
-        disabled={status === "saving"}
+        disabled={status === "saving" || status === "generating"}
         className="w-full rounded-lg bg-foreground text-background py-2.5 text-sm font-medium transition-opacity hover:opacity-90 disabled:opacity-50"
       >
-        {status === "saving" ? "Saving..." : "Generate Pattern"}
+        {status === "saving"
+          ? "Saving..."
+          : status === "generating"
+          ? "Generating pattern with AI..."
+          : "Generate Pattern"}
       </button>
     </form>
   );
